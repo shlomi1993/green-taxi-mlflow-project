@@ -18,11 +18,16 @@ Production-oriented batch monitoring and retraining workflow for NYC green taxi 
 
 ![Green Taxi system architecture](docs/assets/green-taxi-architecture.png)
 
-The project has three primary architectural components:
+The architecture describes the project's static components and how they connect:
 
-- `src/green_taxi_tip_flow.py` owns Metaflow orchestration, branching, and recovery boundaries.
-- `src/green_taxi_tip_pipeline.py` owns reusable data validation, feature engineering, modeling, evaluation, and registry logic.
-- MLflow is the system of record for metrics, artifacts, dataset lineage, decisions, model versions, and the `@champion` alias.
+- **CLI entry point — `run.py`:** exposes the workflow through Metaflow commands and imports `GreenTaxiTipFlow`.
+- **Workflow orchestration — `src/green_taxi_tip_flow.py`:** defines the Metaflow graph, passes state between steps, selects branches, and provides resume boundaries.
+- **Pipeline services — `src/green_taxi_tip_pipeline.py`:** provides the reusable data loading, validation, feature engineering, training, evaluation, and registry functions used by the workflow.
+- **Configuration — `configs/model_monitoring.yaml`:** supplies the data-quality and model-monitoring thresholds consumed by the pipeline.
+- **TLC datasets — `data/raw/`:** provide the reference and incoming batch inputs.
+- **MLflow Tracking and Model Registry — `mlflow_tracking/`:** receive metrics, artifacts, lineage, and decisions from the workflow, store model versions, and resolve the `@champion` alias.
+
+In short, `run.py` starts the Metaflow workflow, the workflow coordinates pipeline services over TLC data and configuration, and both layers record their results in MLflow.
 
 For design rationale, operating boundaries, failure handling, and the production roadmap, see [`docs/design.md`](docs/design.md) and [`docs/architecture.md`](docs/architecture.md).
 
@@ -40,7 +45,7 @@ For design rationale, operating boundaries, failure handling, and the production
 8. **Promotion gate** — Promote only when candidate batch RMSE improves by more than 1 percent and reference RMSE regresses by less than 5 percent. Otherwise, retain the current champion.
 9. **End** — Record the final decision. MLflow retains metrics, artifacts, dataset lineage, prediction outputs, model versions, and gate rationale throughout the run.
 
-The workflow is implemented in `src/green_taxi_tip_flow.py`. Reusable data, validation, feature, model, and registry logic lives in `src/green_taxi_tip_pipeline.py`.
+**The key decisions are:** reject or accept the batch at the integrity gate, retrain or retain the champion at the model gate, and promote or reject the candidate at the promotion gate.
 
 ## 📁 Repository Layout
 
