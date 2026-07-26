@@ -1,4 +1,4 @@
-# 🚕 Green Taxi Tip Prediction with MLflow
+# Green Taxi Tip Prediction with MLflow 🚕
 
 <img width="1672" height="941" alt="green-taxi-project-overview" src="https://github.com/user-attachments/assets/c4fd34e2-8dcc-4dcc-b5f6-9c9ecc021073" />
 
