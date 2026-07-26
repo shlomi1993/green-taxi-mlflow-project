@@ -1,4 +1,3 @@
-
 import mlflow
 import nannyml as nml
 import numpy as np
@@ -8,11 +7,12 @@ from dataclasses import asdict, dataclass, field
 from enum import Enum
 from mlflow.tracking import MlflowClient
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.pipeline import Pipeline
-from typing import Any, Dict, List, Optional, Tuple, Union
+
 
 RAW_DATETIME_COLS = [
     "lpep_pickup_datetime",

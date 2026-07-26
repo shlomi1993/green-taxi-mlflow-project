@@ -1,9 +1,9 @@
 import logging
-import os
 import mlflow
 import mlflow.data
 import mlflow.sklearn
 import numpy as np
+import os
 import pandas as pd
 
 from metaflow import FlowSpec, Parameter, step
@@ -24,6 +24,7 @@ from taxi_tip_ops.pipeline import (
     log_decision,
     run_integrity_checks,
 )
+
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 
