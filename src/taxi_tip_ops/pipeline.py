@@ -81,7 +81,7 @@ FEATURE_COLS = [
 
 TARGET_COL = "tip_amount"
 MODEL_NAME = "green_taxi_tip_model"
-DEFAULT_URI = "http://localhost:5001"
+DEFAULT_URI = "http://localhost:5000"
 DEFAULT_EXPERIMENT = "taxi_tip_monitoring"
 
 

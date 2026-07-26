@@ -1,5 +1,5 @@
 tracking:
-  uri: http://localhost:5001
+  uri: http://localhost:5000
   experiment: taxi_tip_monitoring
   model_name: green_taxi_tip_model
 
