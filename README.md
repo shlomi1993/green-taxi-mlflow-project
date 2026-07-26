@@ -1,10 +1,10 @@
-# Green Taxi MLflow Project
+# 🚕 Green Taxi MLflow Project
 
 <img width="1672" height="941" alt="green-taxi-project-overview" src="https://github.com/user-attachments/assets/c4fd34e2-8dcc-4dcc-b5f6-9c9ecc021073" />
 
 Production-oriented batch monitoring and retraining workflow for NYC green taxi tip prediction. The system watches incoming batches, validates data quality, evaluates the registered champion model, retrains when performance degrades, and promotes a stronger candidate through MLflow Model Registry.
 
-## What This Repo Demonstrates
+## ✨ What This Repo Demonstrates
 
 - Metaflow orchestration for repeatable batch workflows
 - MLflow tracking, artifact logging, dataset lineage, and model registry aliases
@@ -12,7 +12,7 @@ Production-oriented batch monitoring and retraining workflow for NYC green taxi 
 - Champion/candidate evaluation with explicit promotion criteria
 - Reproducible local execution, tests, and operational runbooks
 
-## Architecture
+## 🏗️ Architecture
 
 ```text
 raw TLC batch
@@ -30,7 +30,7 @@ The workflow is implemented in `flows/monitoring_flow.py`. Reusable data, valida
 For design rationale, operating boundaries, failure handling, and the production
 roadmap, see [`docs/design.md`](docs/design.md).
 
-## Repository Layout
+## 📁 Repository Layout
 
 ```text
 .
@@ -46,7 +46,7 @@ roadmap, see [`docs/design.md`](docs/design.md).
 `-- Makefile                  # Common local commands
 ```
 
-## Quick Start
+## 🚀 Quick Start
 
 Create the environment:
 
@@ -82,7 +82,7 @@ make run-shifted
 
 Open the MLflow UI at `http://localhost:5001` and inspect experiment `taxi_tip_monitoring`.
 
-## Model Governance
+## 🛡️ Model Governance
 
 A candidate is promoted only when all gate conditions pass:
 
@@ -93,7 +93,7 @@ A candidate is promoted only when all gate conditions pass:
 
 Promotion updates the MLflow `@champion` alias on `green_taxi_tip_model`. Rejected candidates are still registered with validation tags so there is an audit trail.
 
-## Testing
+## 🧪 Testing
 
 ```bash
 make test
@@ -101,7 +101,7 @@ make test
 
 The tests use synthetic taxi batches and local file-based tracking where possible, so they can run without the MLflow server for most validation paths.
 
-## Operational Notes
+## ⚙️ Operational Notes
 
 - Local tracking state is written to `mlflow_tracking/` and ignored by git.
 - Raw TLC parquet files stay in `data/raw/` and are ignored by git.
