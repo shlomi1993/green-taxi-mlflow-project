@@ -66,7 +66,7 @@ Download the sample operating batches:
 Start MLflow in a separate terminal:
 
 ```bash
-mlflow server --workers 1 --port 5001 \
+mlflow server --workers 1 --port 5000 \
   --backend-store-uri sqlite:///mlflow_tracking/mlflow.db \
   --default-artifact-root mlflow_tracking/mlruns
 ```
@@ -86,7 +86,7 @@ python flows/monitoring_flow.py run \
   --batch-path data/raw/green_tripdata_2020-04.parquet
 ```
 
-Open the MLflow UI at `http://localhost:5001` and inspect experiment `taxi_tip_monitoring`.
+Open the MLflow UI at `http://localhost:5000` and inspect experiment `taxi_tip_monitoring`.
 
 ## 🛡️ Model Governance
 
