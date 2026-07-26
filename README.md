@@ -1,4 +1,4 @@
-# Green Taxi MLOps Platform
+# Green Taxi MLflow Project
 
 Production-oriented batch monitoring and retraining workflow for NYC green taxi tip prediction. The system watches incoming batches, validates data quality, evaluates the registered champion model, retrains when performance degrades, and promotes a stronger candidate through MLflow Model Registry.
 
@@ -24,6 +24,9 @@ raw TLC batch
 ```
 
 The workflow is implemented in `flows/monitoring_flow.py`. Reusable data, validation, feature, model, and registry logic lives in `src/taxi_tip_ops/pipeline.py`.
+
+For design rationale, operating boundaries, failure handling, and the production
+roadmap, see [`docs/design.md`](docs/design.md).
 
 ## Repository Layout
 
