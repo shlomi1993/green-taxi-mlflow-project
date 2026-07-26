@@ -16,7 +16,7 @@ Production-oriented batch monitoring and retraining workflow for NYC green taxi 
 
 ## 🏗️ Architecture
 
-![Green Taxi system architecture](docs/assets/green-taxi-architecture.png)
+![Green Taxi project component architecture](docs/assets/green-taxi-component-architecture.png)
 
 The architecture describes the project's static components and how they connect:
 
