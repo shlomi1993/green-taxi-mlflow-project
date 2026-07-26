@@ -1,4 +1,4 @@
-name: taxi-tip-ops
+name: green-taxi-tip
 channels:
   - conda-forge
 dependencies:

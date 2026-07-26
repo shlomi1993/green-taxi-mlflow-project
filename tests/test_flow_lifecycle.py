@@ -5,14 +5,14 @@ import pandas as pd
 from pathlib import Path
 from typing import Tuple
 
-from green_taxi_flow import GreenTaxiFlow
-from pipeline import DecisionAction, run_integrity_checks
+from green_taxi_tip_flow import GreenTaxiTipFlow
+from green_taxi_tip_pipeline import DecisionAction, run_integrity_checks
 
 
 FeatureXY = Tuple[pd.DataFrame, np.ndarray, pd.DataFrame, np.ndarray]
 
 
-def test_start_initializes_registry_and_advances(flow: GreenTaxiFlow) -> None:
+def test_start_initializes_registry_and_advances(flow: GreenTaxiTipFlow) -> None:
     """
     Test start step initializes the flow with required attributes.
     """
@@ -40,7 +40,7 @@ def test_start_initializes_registry_and_advances(flow: GreenTaxiFlow) -> None:
     assert flow.next.was_called(), "Should call next()"
 
 
-def test_load_data_loads_ref_and_batch(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame, tmp_path: Path) -> None:
+def test_load_data_loads_ref_and_batch(flow: GreenTaxiTipFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame, tmp_path: Path) -> None:
     """
     Test load_data using real parquet files.
     """
@@ -60,12 +60,12 @@ def test_load_data_loads_ref_and_batch(flow: GreenTaxiFlow, taxi_ref: pd.DataFra
     assert flow.next.was_called(), "Should proceed to next step"
 
 
-def test_end_batch_rejected(flow: GreenTaxiFlow) -> None:
+def test_end_batch_rejected(flow: GreenTaxiTipFlow) -> None:
     flow.decision_action = DecisionAction.REJECT_BATCH
     flow.end()  # should not raise
 
 
-def test_attribute_initialization_all_flags_initialized_in_start(flow: GreenTaxiFlow) -> None:
+def test_attribute_initialization_all_flags_initialized_in_start(flow: GreenTaxiTipFlow) -> None:
     """
     All conditional flags should be initialized to prevent AttributeError.
     """
@@ -88,7 +88,7 @@ def test_attribute_initialization_all_flags_initialized_in_start(flow: GreenTaxi
     assert flow.retrain_run_id is None, "retrain_run_id should initialize to None"
 
 
-def test_decision_enum_usage_actions_are_enums_not_strings(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame) -> None:
+def test_decision_enum_usage_actions_are_enums_not_strings(flow: GreenTaxiTipFlow, taxi_ref: pd.DataFrame) -> None:
     """
     All Decision instantiations should use DecisionAction enum values.
     """
@@ -112,7 +112,7 @@ def test_decision_enum_usage_actions_are_enums_not_strings(flow: GreenTaxiFlow, 
     assert not flow.integrity_warn, "integrity_warn should be False for rejected batch"
 
 
-def test_end_handles_all_decision_actions(flow: GreenTaxiFlow) -> None:
+def test_end_handles_all_decision_actions(flow: GreenTaxiTipFlow) -> None:
     """
     End step should handle all possible decision_action values.
     """

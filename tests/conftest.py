@@ -8,8 +8,8 @@ from pathlib import Path
 from typing import Tuple
 from uuid import uuid4
 
-from green_taxi_flow import GreenTaxiFlow
-from pipeline import engineer_features
+from green_taxi_tip_flow import GreenTaxiTipFlow
+from green_taxi_tip_pipeline import engineer_features
 from tests.support import make_taxi_df
 
 
@@ -49,12 +49,12 @@ class SimpleCallRecorder:
 
 
 @pytest.fixture
-def flow(tmp_path: Path) -> GreenTaxiFlow:
+def flow(tmp_path: Path) -> GreenTaxiTipFlow:
     """
-    Bare GreenTaxiFlow (Metaflow __init__ bypassed).
+    Bare GreenTaxiTipFlow (Metaflow __init__ bypassed).
     """
     uid = uuid4().hex[:8]
-    f = object.__new__(GreenTaxiFlow)
+    f = object.__new__(GreenTaxiTipFlow)
     f._datastore = None  # Prevent Metaflow __getattr__ recursion
     f.next = SimpleCallRecorder()  # Record next() calls without Mock
     f.tracking_uri = str(tmp_path / "mlruns")  # Use local file-based tracking (no server needed)

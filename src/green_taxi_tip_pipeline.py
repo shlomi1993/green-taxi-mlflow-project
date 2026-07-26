@@ -82,7 +82,7 @@ FEATURE_COLS = [
 TARGET_COL = "tip_amount"
 MODEL_NAME = "green_taxi_tip_model"
 DEFAULT_URI = "http://localhost:5000"
-DEFAULT_EXPERIMENT = "taxi_tip_monitoring"
+DEFAULT_EXPERIMENT = "green_taxi_tip_monitoring"
 
 
 def load_taxi_table(path: Union[str, Path]) -> pd.DataFrame:

@@ -1,6 +1,6 @@
 tracking:
   uri: http://localhost:5000
-  experiment: taxi_tip_monitoring
+  experiment: green_taxi_tip_monitoring
   model_name: green_taxi_tip_model
 
 quality_gates:

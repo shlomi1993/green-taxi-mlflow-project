@@ -1,4 +1,4 @@
-# 🚕 Green Taxi MLflow Project
+# 🚕 Green Taxi Tip Prediction with MLflow
 
 <img width="1672" height="941" alt="green-taxi-project-overview" src="https://github.com/user-attachments/assets/c4fd34e2-8dcc-4dcc-b5f6-9c9ecc021073" />
 
@@ -20,8 +20,8 @@ Production-oriented batch monitoring and retraining workflow for NYC green taxi 
 
 The project has three primary architectural components:
 
-- `green_taxi_flow.py` owns Metaflow orchestration, branching, and recovery boundaries.
-- `src/pipeline.py` owns reusable data validation, feature engineering, modeling, evaluation, and registry logic.
+- `src/green_taxi_tip_flow.py` owns Metaflow orchestration, branching, and recovery boundaries.
+- `src/green_taxi_tip_pipeline.py` owns reusable data validation, feature engineering, modeling, evaluation, and registry logic.
 - MLflow is the system of record for metrics, artifacts, dataset lineage, decisions, model versions, and the `@champion` alias.
 
 For design rationale, operating boundaries, failure handling, and the production roadmap, see [`docs/design.md`](docs/design.md) and [`docs/architecture.md`](docs/architecture.md).
@@ -40,7 +40,7 @@ For design rationale, operating boundaries, failure handling, and the production
 8. **Promotion gate** — Promote only when candidate batch RMSE improves by more than 1 percent and reference RMSE regresses by less than 5 percent. Otherwise, retain the current champion.
 9. **End** — Record the final decision. MLflow retains metrics, artifacts, dataset lineage, prediction outputs, model versions, and gate rationale throughout the run.
 
-The workflow is implemented in `green_taxi_flow.py`. Reusable data, validation, feature, model, and registry logic lives in `src/pipeline.py`.
+The workflow is implemented in `src/green_taxi_tip_flow.py`. Reusable data, validation, feature, model, and registry logic lives in `src/green_taxi_tip_pipeline.py`.
 
 ## 📁 Repository Layout
 
@@ -49,10 +49,11 @@ The workflow is implemented in `green_taxi_flow.py`. Reusable data, validation, 
 ├── configs/                  # Runtime defaults and quality gate thresholds
 ├── data/raw/                 # Versioned sample TLC parquet files
 ├── docs/                     # Architecture and operating notes
-├── green_taxi_flow.py        # Metaflow monitoring workflow
+├── run.py                    # Workflow CLI entry point
 ├── scripts/                  # Local utility scripts
 ├── src/
-│   └── pipeline.py           # Reusable pipeline module
+│   ├── green_taxi_tip_flow.py    # Metaflow orchestration
+│   └── green_taxi_tip_pipeline.py # Reusable pipeline logic
 ├── tests/                    # Unit and flow-level tests
 ├── environment.yml           # Conda environment
 └── pyproject.toml            # Python package and test configuration
@@ -64,7 +65,7 @@ Create the environment:
 
 ```bash
 conda env create -f environment.yml
-conda activate taxi-tip-ops
+conda activate green-taxi-tip
 python -m pip install -e .
 ```
 
@@ -85,19 +86,19 @@ mlflow server --workers 1 --port 5000 \
 Bootstrap and evaluate the champion:
 
 ```bash
-python green_taxi_flow.py run \
+python run.py run \
   --batch-path data/raw/green_tripdata_2020-01.parquet
 ```
 
 Evaluate a shifted batch and trigger retraining when the gate requires it:
 
 ```bash
-python green_taxi_flow.py run \
+python run.py run \
   --ref-path data/raw/green_tripdata_2020-01.parquet \
   --batch-path data/raw/green_tripdata_2020-04.parquet
 ```
 
-Open the MLflow UI at `http://localhost:5000` and inspect experiment `taxi_tip_monitoring`.
+Open the MLflow UI at `http://localhost:5000` and inspect experiment `green_taxi_tip_monitoring`.
 
 ## 🛡️ Model Governance
 
@@ -119,7 +120,7 @@ python -m pytest
 Run lint checks:
 
 ```bash
-python -m ruff check green_taxi_flow.py src tests
+python -m ruff check run.py src tests
 ```
 
 The tests use synthetic taxi batches and local file-based tracking where possible, so they can run without the MLflow server for most validation paths.

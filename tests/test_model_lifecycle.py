@@ -4,14 +4,14 @@ import pytest
 
 from typing import Tuple
 
-from green_taxi_flow import GreenTaxiFlow
-from pipeline import DecisionAction, build_model, evaluate_model
+from green_taxi_tip_flow import GreenTaxiTipFlow
+from green_taxi_tip_pipeline import DecisionAction, build_model, evaluate_model
 
 
 FeatureXY = Tuple[pd.DataFrame, np.ndarray, pd.DataFrame, np.ndarray]
 
 
-def test_model_gate_no_retrain_within_tolerance(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_no_retrain_within_tolerance(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Test model gate with champion performing within tolerance (uses real model and evaluation).
     """
@@ -46,7 +46,7 @@ def test_model_gate_no_retrain_within_tolerance(flow: GreenTaxiFlow, feature_xy:
     assert flow.decision_action in [DecisionAction.NO_RETRAIN, DecisionAction.RETRAIN], "Should have valid decision action"
 
 
-def test_model_gate_retrain_above_threshold(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_retrain_above_threshold(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Test model gate with champion degrading on shifted batch data (uses real model).
     """
@@ -84,7 +84,7 @@ def test_model_gate_retrain_above_threshold(flow: GreenTaxiFlow, feature_xy: Fea
     assert flow.decision_action == DecisionAction.RETRAIN, "Should trigger retrain with significant shift"
 
 
-def test_retrain_trains_on_combined_data(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_retrain_trains_on_combined_data(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Test retrain combines reference and batch data correctly using real model training.
     """
@@ -113,17 +113,17 @@ def test_retrain_trains_on_combined_data(flow: GreenTaxiFlow, feature_xy: Featur
     assert flow.next.was_called(), "Should proceed to next step"
 
 
-def test_end_retrain_completed(flow: GreenTaxiFlow) -> None:
+def test_end_retrain_completed(flow: GreenTaxiTipFlow) -> None:
     flow.decision_action = DecisionAction.PROMOTE
     flow.end()
 
 
-def test_end_no_retrain_needed(flow: GreenTaxiFlow) -> None:
+def test_end_no_retrain_needed(flow: GreenTaxiTipFlow) -> None:
     flow.decision_action = DecisionAction.NO_RETRAIN
     flow.end()
 
 
-def test_model_gate_zero_rmse_baseline_handles_division(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_zero_rmse_baseline_handles_division(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Zero RMSE on reference should not cause division by zero.
     """
@@ -160,7 +160,7 @@ def test_model_gate_zero_rmse_baseline_handles_division(flow: GreenTaxiFlow, fea
     assert flow.decision_action in [DecisionAction.NO_RETRAIN, DecisionAction.RETRAIN], "Should have valid decision"
 
 
-def test_attribute_initialization_retrain_initializes_all_outputs(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_attribute_initialization_retrain_initializes_all_outputs(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Model gate should initialize all retrain output attributes.
     """
@@ -207,7 +207,7 @@ def test_attribute_initialization_retrain_initializes_all_outputs(flow: GreenTax
         assert flow.retrain_run_id is None, "retrain_run_id should be None when not triggered"
 
 
-def test_model_gate_exactly_5_percent_increase_no_retrain(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_exactly_5_percent_increase_no_retrain(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Test model gate with similar data should not trigger retrain.
     """
@@ -239,7 +239,7 @@ def test_model_gate_exactly_5_percent_increase_no_retrain(flow: GreenTaxiFlow, f
     assert flow.decision_action in [DecisionAction.NO_RETRAIN, DecisionAction.RETRAIN], "Should have valid decision"
 
 
-def test_model_gate_negative_rmse_increase_no_retrain(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_negative_rmse_increase_no_retrain(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Test model gate evaluates champion on both reference and batch data.
     """
@@ -271,7 +271,7 @@ def test_model_gate_negative_rmse_increase_no_retrain(flow: GreenTaxiFlow, featu
     assert flow.decision_action in [DecisionAction.NO_RETRAIN, DecisionAction.RETRAIN], "Should have valid decision"
 
 
-def test_model_gate_logs_dataset_lineage(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_logs_dataset_lineage(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Model gate should evaluate champion on both batch and reference data.
     """
@@ -299,7 +299,7 @@ def test_model_gate_logs_dataset_lineage(flow: GreenTaxiFlow, feature_xy: Featur
     assert flow.rmse_champion_on_ref is not None, "Should evaluate champion on reference"
 
 
-def test_model_gate_logs_predictions_artifact(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_logs_predictions_artifact(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Model gate should generate predictions on batch data.
     """
@@ -326,7 +326,7 @@ def test_model_gate_logs_predictions_artifact(flow: GreenTaxiFlow, feature_xy: F
     assert len(predictions) == len(X_batch), "Should predict for all batch samples"
 
 
-def test_retrain_logs_training_dataset_lineage(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_retrain_logs_training_dataset_lineage(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Retrain step should combine and train on reference + batch data.
     """
@@ -349,7 +349,7 @@ def test_retrain_logs_training_dataset_lineage(flow: GreenTaxiFlow, feature_xy: 
     assert len(X_ref) + len(X_batch) == 300, "Combined data should be 300 rows (200 + 100)"
 
 
-def test_retrain_combines_ref_and_batch_correctly(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_retrain_combines_ref_and_batch_correctly(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Verify that retrain merges reference and batch data with correct dimensions.
     """
@@ -375,7 +375,7 @@ def test_retrain_combines_ref_and_batch_correctly(flow: GreenTaxiFlow, feature_x
     assert len(X_ref) + len(X_batch) == 300, "Combined data should have 300 rows (200 ref + 100 batch)"
 
 
-def test_retrain_logs_training_params(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_retrain_logs_training_params(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Retrain should log reference_path and batch_path as MLflow params.
     """
@@ -398,7 +398,7 @@ def test_retrain_logs_training_params(flow: GreenTaxiFlow, feature_xy: FeatureXY
     assert flow.batch_path == "data/batch.parquet", "batch_path should be set"
 
 
-def test_model_gate_sets_run_id_attribute(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_sets_run_id_attribute(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Model gate should execute and set RMSE metrics.
     """
