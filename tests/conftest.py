@@ -9,7 +9,7 @@ from typing import Tuple
 from uuid import uuid4
 
 from green_taxi_flow import GreenTaxiFlow
-from taxi_tip_ops.pipeline import engineer_features
+from pipeline import engineer_features
 from tests.support import make_taxi_df
 
 
