@@ -5,6 +5,7 @@
 Production-oriented batch monitoring and retraining workflow for NYC green taxi tip prediction. The system watches incoming batches, validates data quality, evaluates the registered champion model, retrains when performance degrades, and promotes a stronger candidate through MLflow Model Registry.
 
 ## ✨ What This Repo Demonstrates
+<img width="1041" height="148" alt="flow drawio (1)" src="https://github.com/user-attachments/assets/b760e4dc-fff6-4484-8e82-13573213d6e6" />
 
 - Metaflow orchestration for repeatable batch workflows
 - MLflow tracking, artifact logging, dataset lineage, and model registry aliases
