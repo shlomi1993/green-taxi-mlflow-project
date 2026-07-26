@@ -4,6 +4,8 @@
 
 Keep a taxi tip prediction model reliable as demand patterns change. The workflow treats every new batch as an operational event: validate it, score the current champion, decide whether retraining is justified, and promote only if the candidate is both better and stable.
 
+<img width="1536" height="1024" alt="green-taxi-architecture" src="https://github.com/user-attachments/assets/a0231448-c429-460b-b497-2fdc643badc3" />
+
 ## Components
 
 `green_taxi_flow.py` owns orchestration. Each Metaflow step has one clear responsibility and records its decision state in MLflow.
