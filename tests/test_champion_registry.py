@@ -4,8 +4,7 @@ import pandas as pd
 from typing import Tuple
 
 from green_taxi_flow import GreenTaxiFlow
-from taxi_tip_ops.pipeline import build_model, evaluate_model
-
+from pipeline import build_model, evaluate_model
 
 FeatureXY = Tuple[pd.DataFrame, np.ndarray, pd.DataFrame, np.ndarray]
 

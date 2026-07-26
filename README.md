@@ -7,7 +7,6 @@ Production-oriented batch monitoring and retraining workflow for NYC green taxi 
 > **Disclaimer:** This project was developed and tested in a macOS environment. Other operating systems may require additional setup or dependency adjustments.
 
 ## ✨ What This Repo Demonstrates
-<img width="1041" height="148" alt="flow drawio (1)" src="https://github.com/user-attachments/assets/b760e4dc-fff6-4484-8e82-13573213d6e6" />
 
 - Metaflow orchestration for repeatable batch workflows
 - MLflow tracking, artifact logging, dataset lineage, and model registry aliases
@@ -17,21 +16,31 @@ Production-oriented batch monitoring and retraining workflow for NYC green taxi 
 
 ## 🏗️ Architecture
 
-```text
-raw TLC batch
-  -> integrity gate
-  -> feature engineering
-  -> champion evaluation
-  -> retrain decision
-  -> candidate training
-  -> promotion gate
-  -> champion alias update
-```
+![Green Taxi system architecture](docs/assets/green-taxi-architecture.png)
 
-The workflow is implemented in `green_taxi_flow.py`. Reusable data, validation, feature, model, and registry logic lives in `src/taxi_tip_ops/pipeline.py`.
+The project has three primary architectural components:
 
-For design rationale, operating boundaries, failure handling, and the production
-roadmap, see [`docs/design.md`](docs/design.md).
+- `green_taxi_flow.py` owns Metaflow orchestration, branching, and recovery boundaries.
+- `src/pipeline.py` owns reusable data validation, feature engineering, modeling, evaluation, and registry logic.
+- MLflow is the system of record for metrics, artifacts, dataset lineage, decisions, model versions, and the `@champion` alias.
+
+For design rationale, operating boundaries, failure handling, and the production roadmap, see [`docs/design.md`](docs/design.md) and [`docs/architecture.md`](docs/architecture.md).
+
+## 🔄 Flow Steps
+
+<img width="1041" height="148" alt="Green Taxi monitoring flow steps" src="https://github.com/user-attachments/assets/b760e4dc-fff6-4484-8e82-13573213d6e6" />
+
+1. **Start** — Initialize run state, configure MLflow tracking, and connect to the model registry.
+2. **Load data** — Read the incoming TLC batch and the optional reference batch. During bootstrap, the incoming batch also acts as the reference.
+3. **Integrity gate** — Reject unsafe data with missing columns, invalid timestamps, impossible durations, severe target missingness, or excessive range violations. NannyML drift findings remain non-blocking warnings.
+4. **Feature engineering** — Filter the modeling population and deterministically produce the shared feature schema for reference and batch data.
+5. **Load champion** — Resolve `models:/green_taxi_tip_model@champion`. If no champion exists, train and register the initial model from the reference data.
+6. **Model gate** — Evaluate the champion on both datasets. Retraining starts when batch RMSE degradation exceeds 3 percent with an integrity warning or 5 percent for a clean batch.
+7. **Candidate training** — When required, train a candidate on the combined reference and current batches, then evaluate it on both populations.
+8. **Promotion gate** — Promote only when candidate batch RMSE improves by more than 1 percent and reference RMSE regresses by less than 5 percent. Otherwise, retain the current champion.
+9. **End** — Record the final decision. MLflow retains metrics, artifacts, dataset lineage, prediction outputs, model versions, and gate rationale throughout the run.
+
+The workflow is implemented in `green_taxi_flow.py`. Reusable data, validation, feature, model, and registry logic lives in `src/pipeline.py`.
 
 ## 📁 Repository Layout
 
@@ -42,7 +51,8 @@ roadmap, see [`docs/design.md`](docs/design.md).
 ├── docs/                     # Architecture and operating notes
 ├── green_taxi_flow.py        # Metaflow monitoring workflow
 ├── scripts/                  # Local utility scripts
-├── src/taxi_tip_ops/         # Reusable pipeline package
+├── src/
+│   └── pipeline.py           # Reusable pipeline module
 ├── tests/                    # Unit and flow-level tests
 ├── environment.yml           # Conda environment
 └── pyproject.toml            # Python package and test configuration
@@ -109,7 +119,7 @@ python -m pytest
 Run lint checks:
 
 ```bash
-python -m ruff check src flows tests
+python -m ruff check green_taxi_flow.py src tests
 ```
 
 The tests use synthetic taxi batches and local file-based tracking where possible, so they can run without the MLflow server for most validation paths.

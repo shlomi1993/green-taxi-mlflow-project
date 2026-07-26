@@ -9,7 +9,7 @@ import pandas as pd
 from metaflow import FlowSpec, Parameter, step
 from mlflow.tracking import MlflowClient
 
-from taxi_tip_ops.pipeline import (
+from pipeline import (
     DEFAULT_EXPERIMENT,
     DEFAULT_URI,
     FEATURE_COLS,

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Tuple
 
 from green_taxi_flow import GreenTaxiFlow
-from taxi_tip_ops.pipeline import DecisionAction, run_integrity_checks
+from pipeline import DecisionAction, run_integrity_checks
 
 
 FeatureXY = Tuple[pd.DataFrame, np.ndarray, pd.DataFrame, np.ndarray]
