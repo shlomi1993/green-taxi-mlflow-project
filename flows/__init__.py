@@ -1,3 +1,0 @@
-"""
-Metaflow workflow entrypoints.
-"""

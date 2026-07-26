@@ -27,7 +27,7 @@ raw TLC batch
   -> champion alias update
 ```
 
-The workflow is implemented in `flows/monitoring_flow.py`. Reusable data, validation, feature, model, and registry logic lives in `src/taxi_tip_ops/pipeline.py`.
+The workflow is implemented in `green_taxi_flow.py`. Reusable data, validation, feature, model, and registry logic lives in `src/taxi_tip_ops/pipeline.py`.
 
 For design rationale, operating boundaries, failure handling, and the production
 roadmap, see [`docs/design.md`](docs/design.md).
@@ -39,7 +39,7 @@ roadmap, see [`docs/design.md`](docs/design.md).
 ├── configs/                  # Runtime defaults and quality gate thresholds
 ├── data/raw/                 # Versioned sample TLC parquet files
 ├── docs/                     # Architecture and operating notes
-├── flows/                    # Metaflow entrypoints
+├── green_taxi_flow.py        # Metaflow monitoring workflow
 ├── scripts/                  # Local utility scripts
 ├── src/taxi_tip_ops/         # Reusable pipeline package
 ├── tests/                    # Unit and flow-level tests
@@ -74,14 +74,14 @@ mlflow server --workers 1 --port 5000 \
 Bootstrap and evaluate the champion:
 
 ```bash
-python flows/monitoring_flow.py run \
+python green_taxi_flow.py run \
   --batch-path data/raw/green_tripdata_2020-01.parquet
 ```
 
 Evaluate a shifted batch and trigger retraining when the gate requires it:
 
 ```bash
-python flows/monitoring_flow.py run \
+python green_taxi_flow.py run \
   --ref-path data/raw/green_tripdata_2020-01.parquet \
   --batch-path data/raw/green_tripdata_2020-04.parquet
 ```
