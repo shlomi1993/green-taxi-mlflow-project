@@ -1,5 +1,10 @@
 # Green Taxi Tip Prediction with MLflow
 
+[![MLflow](https://img.shields.io/badge/MLflow-Model_Lifecycle-0194E2?logo=mlflow&logoColor=white)](https://mlflow.org/)
+[![Metaflow](https://img.shields.io/badge/Metaflow-Workflow_Orchestration-FA4647?logo=netflix&logoColor=white)](https://metaflow.org/)
+[![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Conda](https://img.shields.io/badge/Conda-Environment-44A833?logo=anaconda&logoColor=white)](https://docs.conda.io/)
+
 ![Green Taxi project overview](docs/assets/green-taxi-project-overview.png)
 
 Production-oriented batch monitoring and retraining workflow for NYC green taxi tip prediction. The system watches incoming batches, validates data quality, evaluates the registered champion model, retrains when performance degrades, and promotes a stronger candidate through MLflow Model Registry.
