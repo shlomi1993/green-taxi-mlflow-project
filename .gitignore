@@ -29,6 +29,9 @@ data/processed/
 artifacts/
 models/
 *.parquet
+!data/raw/green_tripdata_2020-01.parquet
+!data/raw/green_tripdata_2020-04.parquet
+!data/raw/green_tripdata_2020-08.parquet
 *.pkl
 *.joblib
 
