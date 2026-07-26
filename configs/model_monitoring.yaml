@@ -1,0 +1,14 @@
+tracking:
+  uri: http://localhost:5001
+  experiment: taxi_tip_monitoring
+  model_name: green_taxi_tip_model
+
+quality_gates:
+  retrain_threshold_with_integrity_warning: 0.03
+  retrain_threshold_clean_batch: 0.05
+  min_promotion_improvement: 0.01
+  max_reference_regression: 0.05
+
+data:
+  reference_batch: data/raw/green_tripdata_2020-01.parquet
+  comparison_batch: data/raw/green_tripdata_2020-04.parquet

@@ -1,0 +1,16 @@
+name: taxi-tip-ops
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy>=2.0
+  - pandas>=2.3
+  - scikit-learn>=1.5
+  - pyarrow>=16
+  - pytest>=8
+  - pip
+  - pip:
+      - metaflow>=2.12
+      - mlflow==3.8
+      - nannyml>=0.13
+      - ruff>=0.6
