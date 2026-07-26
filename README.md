@@ -54,7 +54,7 @@ Create the environment:
 ```bash
 conda env create -f environment.yml
 conda activate taxi-tip-ops
-python -m pip install -e ".[dev]"
+python -m pip install -e .
 ```
 
 Download the sample operating batches:
