@@ -9,7 +9,7 @@ import pandas as pd
 from metaflow import FlowSpec, Parameter, step
 from mlflow.tracking import MlflowClient
 
-from pipeline import (
+from green_taxi_tip_pipeline import (
     DEFAULT_EXPERIMENT,
     DEFAULT_URI,
     FEATURE_COLS,
@@ -29,7 +29,7 @@ from pipeline import (
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 
 
-class GreenTaxiFlow(FlowSpec):
+class GreenTaxiTipFlow(FlowSpec):
     """
     Batch monitoring loop:
         new batch -> integrity gate -> feature engineering -> performance gate -> retrain -> promote
@@ -539,7 +539,3 @@ class GreenTaxiFlow(FlowSpec):
         }
         assert self.decision_action in outcome_messages.keys(), f"Unknown decision action: {self.decision_action}"
         self.logger.info(f"Flow finished: {outcome_messages[self.decision_action]}")
-
-
-if __name__ == "__main__":
-    GreenTaxiFlow()

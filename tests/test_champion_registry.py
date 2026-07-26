@@ -3,13 +3,14 @@ import pandas as pd
 
 from typing import Tuple
 
-from green_taxi_flow import GreenTaxiFlow
-from pipeline import build_model, evaluate_model
+from green_taxi_tip_flow import GreenTaxiTipFlow
+from green_taxi_tip_pipeline import build_model, evaluate_model
+
 
 FeatureXY = Tuple[pd.DataFrame, np.ndarray, pd.DataFrame, np.ndarray]
 
 
-def test_load_champion_loads_existing_champion(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_load_champion_loads_existing_champion(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Test loading existing champion from registry.
     """
@@ -46,7 +47,7 @@ def test_load_champion_loads_existing_champion(flow: GreenTaxiFlow, feature_xy: 
     assert flow.champion_uri == "models:/test@champion", "Champion URI should match expected alias format"
 
 
-def test_load_champion_bootstraps_when_no_champion(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_load_champion_bootstraps_when_no_champion(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Test bootstrap training when no champion exists.
     """
@@ -107,7 +108,7 @@ def test_load_champion_bootstraps_when_no_champion(flow: GreenTaxiFlow, feature_
     assert flow.champion_uri == "models:/test@champion", "Champion URI should be set correctly after loading"
 
 
-def test_bootstrap_logs_correct_tags(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_bootstrap_logs_correct_tags(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Bootstrap training should set bootstrap=true and trained_on=reference tags.
     """
@@ -162,7 +163,7 @@ def test_bootstrap_logs_correct_tags(flow: GreenTaxiFlow, feature_xy: FeatureXY)
         assert test_registry.registered_tags.get("bootstrap") == "true", "Bootstrap tag should be 'true'"
 
 
-def test_bootstrap_registers_with_validation_approved(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_bootstrap_registers_with_validation_approved(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Bootstrap should register version with validation_status=approved.
     """
@@ -213,7 +214,7 @@ def test_bootstrap_registers_with_validation_approved(flow: GreenTaxiFlow, featu
         assert test_registry.registered_tags["role"] == "champion", "Bootstrap version should have champion role"
 
 
-def test_full_bootstrap_to_load_champion_flow(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
+def test_full_bootstrap_to_load_champion_flow(flow: GreenTaxiTipFlow, feature_xy: FeatureXY) -> None:
     """
     Integration test: Bootstrap creates champion, then load_champion retrieves it.
     """

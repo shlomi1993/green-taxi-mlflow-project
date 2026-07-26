@@ -3,13 +3,13 @@ import pandas as pd
 
 from typing import Tuple
 
-from green_taxi_flow import GreenTaxiFlow
+from green_taxi_tip_flow import GreenTaxiTipFlow
 
 
 FeatureXY = Tuple[pd.DataFrame, np.ndarray, pd.DataFrame, np.ndarray]
 
 
-def test_promotion_gate_promote_all_criteria_pass(flow: GreenTaxiFlow) -> None:
+def test_promotion_gate_promote_all_criteria_pass(flow: GreenTaxiTipFlow) -> None:
     """
     Test promotion when candidate is better and meets all criteria.
     """
@@ -64,7 +64,7 @@ def test_promotion_gate_promote_all_criteria_pass(flow: GreenTaxiFlow) -> None:
     assert test_registry.promoted is True, "Should promote candidate to champion"
 
 
-def test_promotion_gate_no_promote_candidate_not_better_enough(flow: GreenTaxiFlow) -> None:
+def test_promotion_gate_no_promote_candidate_not_better_enough(flow: GreenTaxiTipFlow) -> None:
     """
     Test no promotion when candidate doesn't meet minimum improvement threshold.
     """
@@ -108,7 +108,7 @@ def test_promotion_gate_no_promote_candidate_not_better_enough(flow: GreenTaxiFl
     assert test_registry.promoted is False, "Should not promote candidate"
 
 
-def test_promotion_gate_no_promote_reference_regression(flow: GreenTaxiFlow) -> None:
+def test_promotion_gate_no_promote_reference_regression(flow: GreenTaxiTipFlow) -> None:
     """
     Test no promotion when candidate has significant regression on reference data.
     """
@@ -149,7 +149,7 @@ def test_promotion_gate_no_promote_reference_regression(flow: GreenTaxiFlow) -> 
     assert test_registry.promoted is False, "Should not promote candidate with regression"
 
 
-def test_promotion_criteria_exactly_at_threshold(flow: GreenTaxiFlow) -> None:
+def test_promotion_criteria_exactly_at_threshold(flow: GreenTaxiTipFlow) -> None:
     """
     Candidate exactly at min_improvement threshold should NOT promote (< required, not <=).
     """
@@ -187,7 +187,7 @@ def test_promotion_criteria_exactly_at_threshold(flow: GreenTaxiFlow) -> None:
     assert test_registry.promoted is False, "Should not promote at exactly threshold"
 
 
-def test_promotion_criteria_just_below_threshold(flow: GreenTaxiFlow) -> None:
+def test_promotion_criteria_just_below_threshold(flow: GreenTaxiTipFlow) -> None:
     """
     Candidate just barely better than threshold should promote.
     """
@@ -230,7 +230,7 @@ def test_promotion_criteria_just_below_threshold(flow: GreenTaxiFlow) -> None:
     assert test_registry.promoted is True, "Should promote when better than threshold"
 
 
-def test_promotion_criteria_reference_regression_at_5_percent(flow: GreenTaxiFlow) -> None:
+def test_promotion_criteria_reference_regression_at_5_percent(flow: GreenTaxiTipFlow) -> None:
     """
     Exactly 5% regression on reference should NOT promote.
     """
@@ -269,7 +269,7 @@ def test_promotion_criteria_reference_regression_at_5_percent(flow: GreenTaxiFlo
     assert test_registry.promoted is False, "Should not promote with 5% regression"
 
 
-def test_promotion_audit_trail_rejected_candidate_registered_with_tags(flow: GreenTaxiFlow) -> None:
+def test_promotion_audit_trail_rejected_candidate_registered_with_tags(flow: GreenTaxiTipFlow) -> None:
     """
     Rejected candidates should be registered with proper tags.
     """
@@ -324,7 +324,7 @@ def test_promotion_gate_p4_obsolete() -> None:
     pass
 
 
-def test_promotion_gate_all_criteria_fail(flow: GreenTaxiFlow) -> None:
+def test_promotion_gate_all_criteria_fail(flow: GreenTaxiTipFlow) -> None:
     """
     When all promotion criteria fail, candidate should still be registered as rejected.
     """

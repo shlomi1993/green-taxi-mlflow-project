@@ -8,9 +8,9 @@ Keep a taxi tip prediction model reliable as demand patterns change. The workflo
 
 ## Components
 
-`green_taxi_flow.py` owns orchestration. Each Metaflow step has one clear responsibility and records its decision state in MLflow.
+`src/green_taxi_tip_flow.py` owns orchestration. Each Metaflow step has one clear responsibility and records its decision state in MLflow.
 
-`src/pipeline.py` owns reusable logic: loading parquet or CSV data, integrity checks, NannyML drift checks, feature engineering, model construction, evaluation, and registry operations.
+`src/green_taxi_tip_pipeline.py` owns reusable logic: loading parquet or CSV data, integrity checks, NannyML drift checks, feature engineering, model construction, evaluation, and registry operations.
 
 MLflow is the system of record for metrics, artifacts, dataset lineage, and champion alias management.
 

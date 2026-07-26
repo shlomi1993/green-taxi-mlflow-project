@@ -61,8 +61,8 @@ models:/green_taxi_tip_model@champion
 
 The implementation is divided into two primary modules:
 
-- `green_taxi_flow.py` owns orchestration, branching, and MLflow run boundaries.
-- `src/pipeline.py` owns data loading, validation, feature engineering, model construction, evaluation, decision logging, and registry operations.
+- `src/green_taxi_tip_flow.py` owns orchestration, branching, and MLflow run boundaries.
+- `src/green_taxi_tip_pipeline.py` owns data loading, validation, feature engineering, model construction, evaluation, decision logging, and registry operations.
 
 ## 4. Data Contract
 
