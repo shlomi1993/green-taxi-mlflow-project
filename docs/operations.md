@@ -5,7 +5,9 @@
 Start MLflow with:
 
 ```bash
-make mlflow
+mlflow server --workers 1 --port 5001 \
+  --backend-store-uri sqlite:///mlflow_tracking/mlflow.db \
+  --default-artifact-root mlflow_tracking/mlruns
 ```
 
 The UI is available at `http://localhost:5001`. The default backend store is SQLite and the artifact root is `mlflow_tracking/mlruns`.
