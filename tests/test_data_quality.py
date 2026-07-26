@@ -4,7 +4,7 @@ import pandas as pd
 from pathlib import Path
 from typing import Tuple
 
-from flows.monitoring_flow import TaxiTipMonitoringFlow
+from green_taxi_flow import GreenTaxiFlow
 from taxi_tip_ops.pipeline import (
     FEATURE_COLS,
     RAW_NUMERIC_COLS,
@@ -21,7 +21,7 @@ from tests.support import make_taxi_df
 FeatureXY = Tuple[pd.DataFrame, np.ndarray, pd.DataFrame, np.ndarray]
 
 
-def test_integrity_gate_accepted_no_warnings(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
+def test_integrity_gate_accepted_no_warnings(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
     """
     Test integrity gate with valid data that passes all checks (uses real run_integrity_checks).
     """
@@ -42,7 +42,7 @@ def test_integrity_gate_accepted_no_warnings(flow: TaxiTipMonitoringFlow, taxi_r
     assert flow.next.was_called(), "Should proceed to next step"
 
 
-def test_integrity_gate_rejected_on_hard_failure(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame) -> None:
+def test_integrity_gate_rejected_on_hard_failure(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame) -> None:
     """
     Test integrity gate with data missing required columns (uses real run_integrity_checks).
     """
@@ -63,7 +63,7 @@ def test_integrity_gate_rejected_on_hard_failure(flow: TaxiTipMonitoringFlow, ta
     assert flow.next.was_called(), "Should proceed to next step"
 
 
-def test_integrity_gate_accepted_with_nannyml_warnings(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame) -> None:
+def test_integrity_gate_accepted_with_nannyml_warnings(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame) -> None:
     """
     Test integrity gate with data that may trigger drift warnings (uses real run_integrity_checks).
     """
@@ -86,7 +86,7 @@ def test_integrity_gate_accepted_with_nannyml_warnings(flow: TaxiTipMonitoringFl
     assert flow.decision_action == DecisionAction.BATCH_ACCEPTED, "Batch should be accepted despite potential drift warnings"
 
 
-def test_feature_engineering_produces_features(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
+def test_feature_engineering_produces_features(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
     """
     Test feature engineering using real engineer_features function.
     """
@@ -106,7 +106,7 @@ def test_feature_engineering_produces_features(flow: TaxiTipMonitoringFlow, taxi
     assert flow.next.was_called(), "Should proceed to next step"
 
 
-def test_model_gate_retrain_lowered_threshold_with_integrity_warn(flow: TaxiTipMonitoringFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_retrain_lowered_threshold_with_integrity_warn(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
     """
     Test lowered threshold (3%) when integrity warnings present.
     """
@@ -143,7 +143,7 @@ def test_model_gate_retrain_lowered_threshold_with_integrity_warn(flow: TaxiTipM
     assert flow.decision_action == DecisionAction.RETRAIN, "Should trigger retrain with lowered threshold"
 
 
-def test_model_gate_integrity_warn_lowers_threshold_exactly_at_3_percent(flow: TaxiTipMonitoringFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_integrity_warn_lowers_threshold_exactly_at_3_percent(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
     """
     Test that integrity warning lowers threshold from 5% to 3%.
     """
@@ -175,7 +175,7 @@ def test_model_gate_integrity_warn_lowers_threshold_exactly_at_3_percent(flow: T
     assert flow.decision_action in [DecisionAction.NO_RETRAIN, DecisionAction.RETRAIN], "Should have valid decision"
 
 
-def test_integrity_check_multiple_hard_failures(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame) -> None:
+def test_integrity_check_multiple_hard_failures(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame) -> None:
     """
     Multiple hard failures should all be reported.
     """
@@ -199,7 +199,7 @@ def test_integrity_check_multiple_hard_failures(flow: TaxiTipMonitoringFlow, tax
     assert flow.next.was_called(), "Should proceed to next step"
 
 
-def test_integrity_check_multiple_nannyml_warnings(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame) -> None:
+def test_integrity_check_multiple_nannyml_warnings(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame) -> None:
     """
     Multiple NannyML drift warnings should all be logged.
     """
@@ -226,7 +226,7 @@ def test_integrity_check_multiple_nannyml_warnings(flow: TaxiTipMonitoringFlow, 
     assert flow.next.was_called(), "Should proceed to next step"
 
 
-def test_data_edge_case_empty_dataframes_after_filtering(flow: TaxiTipMonitoringFlow) -> None:
+def test_data_edge_case_empty_dataframes_after_filtering(flow: GreenTaxiFlow) -> None:
     """
     Feature engineering should handle empty DataFrames gracefully.
     """
@@ -253,7 +253,7 @@ def test_data_edge_case_empty_dataframes_after_filtering(flow: TaxiTipMonitoring
     assert len(flow.y_batch) == 0, "y_batch should be empty after filtering"
 
 
-def test_data_edge_case_large_row_count_difference(flow: TaxiTipMonitoringFlow, tmp_path: Path) -> None:
+def test_data_edge_case_large_row_count_difference(flow: GreenTaxiFlow, tmp_path: Path) -> None:
     """
     Should handle large difference in row counts between ref and batch.
     """
@@ -276,7 +276,7 @@ def test_data_edge_case_large_row_count_difference(flow: TaxiTipMonitoringFlow, 
     assert flow.next.was_called(), "Should proceed to next step"
 
 
-def test_integrity_gate_branches_to_end_on_rejection(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame) -> None:
+def test_integrity_gate_branches_to_end_on_rejection(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame) -> None:
     """
     When batch is rejected, integrity_gate should branch directly to end (not feature_engineering).
     """
@@ -297,7 +297,7 @@ def test_integrity_gate_branches_to_end_on_rejection(flow: TaxiTipMonitoringFlow
     assert flow.next.was_called(), "Should call next() to branch"
 
 
-def test_integrity_gate_branches_to_feature_engineering_on_acceptance(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
+def test_integrity_gate_branches_to_feature_engineering_on_acceptance(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
     """
     When batch is accepted, integrity_gate should branch to feature_engineering.
     """
@@ -315,7 +315,7 @@ def test_integrity_gate_branches_to_feature_engineering_on_acceptance(flow: Taxi
     assert flow.next.was_called(), "Should call next() to branch"
 
 
-def test_model_gate_exactly_3_percent_with_integrity_warn_no_retrain(flow: TaxiTipMonitoringFlow, feature_xy: FeatureXY) -> None:
+def test_model_gate_exactly_3_percent_with_integrity_warn_no_retrain(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
     """
     Test model gate completes successfully with integrity warning flag set.
     """
@@ -347,7 +347,7 @@ def test_model_gate_exactly_3_percent_with_integrity_warn_no_retrain(flow: TaxiT
     assert flow.decision_action in [DecisionAction.NO_RETRAIN, DecisionAction.RETRAIN], "Should have valid decision"
 
 
-def test_feature_engineering_logs_mlflow_tags(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
+def test_feature_engineering_logs_mlflow_tags(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
     """
     Feature engineering step should execute successfully with real data.
     """
@@ -366,7 +366,7 @@ def test_feature_engineering_logs_mlflow_tags(flow: TaxiTipMonitoringFlow, taxi_
     assert set(flow.X_ref.columns) == set(FEATURE_COLS), "Should have correct feature columns"
 
 
-def test_integrity_gate_sets_run_id_attribute(flow: TaxiTipMonitoringFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
+def test_integrity_gate_sets_run_id_attribute(flow: GreenTaxiFlow, taxi_ref: pd.DataFrame, taxi_batch: pd.DataFrame) -> None:
     """
     Integrity gate should execute and update decision state.
     """

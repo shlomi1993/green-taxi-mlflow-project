@@ -29,12 +29,11 @@ from taxi_tip_ops.pipeline import (
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
 
 
-class TaxiTipMonitoringFlow(FlowSpec):
+class GreenTaxiFlow(FlowSpec):
     """
     Batch monitoring loop:
         new batch -> integrity gate -> feature engineering -> performance gate -> retrain -> promote
     """
-
     batch_path = Parameter(
         "batch-path",
         help="Path to new batch parquet (e.g. 2020-04)",
@@ -543,4 +542,4 @@ class TaxiTipMonitoringFlow(FlowSpec):
 
 
 if __name__ == "__main__":
-    TaxiTipMonitoringFlow()
+    GreenTaxiFlow()

@@ -3,14 +3,14 @@ import pandas as pd
 
 from typing import Tuple
 
-from flows.monitoring_flow import TaxiTipMonitoringFlow
+from green_taxi_flow import GreenTaxiFlow
 from taxi_tip_ops.pipeline import build_model, evaluate_model
 
 
 FeatureXY = Tuple[pd.DataFrame, np.ndarray, pd.DataFrame, np.ndarray]
 
 
-def test_load_champion_loads_existing_champion(flow: TaxiTipMonitoringFlow, feature_xy: FeatureXY) -> None:
+def test_load_champion_loads_existing_champion(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
     """
     Test loading existing champion from registry.
     """
@@ -47,7 +47,7 @@ def test_load_champion_loads_existing_champion(flow: TaxiTipMonitoringFlow, feat
     assert flow.champion_uri == "models:/test@champion", "Champion URI should match expected alias format"
 
 
-def test_load_champion_bootstraps_when_no_champion(flow: TaxiTipMonitoringFlow, feature_xy: FeatureXY) -> None:
+def test_load_champion_bootstraps_when_no_champion(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
     """
     Test bootstrap training when no champion exists.
     """
@@ -108,7 +108,7 @@ def test_load_champion_bootstraps_when_no_champion(flow: TaxiTipMonitoringFlow, 
     assert flow.champion_uri == "models:/test@champion", "Champion URI should be set correctly after loading"
 
 
-def test_bootstrap_logs_correct_tags(flow: TaxiTipMonitoringFlow, feature_xy: FeatureXY) -> None:
+def test_bootstrap_logs_correct_tags(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
     """
     Bootstrap training should set bootstrap=true and trained_on=reference tags.
     """
@@ -163,7 +163,7 @@ def test_bootstrap_logs_correct_tags(flow: TaxiTipMonitoringFlow, feature_xy: Fe
         assert test_registry.registered_tags.get("bootstrap") == "true", "Bootstrap tag should be 'true'"
 
 
-def test_bootstrap_registers_with_validation_approved(flow: TaxiTipMonitoringFlow, feature_xy: FeatureXY) -> None:
+def test_bootstrap_registers_with_validation_approved(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
     """
     Bootstrap should register version with validation_status=approved.
     """
@@ -214,7 +214,7 @@ def test_bootstrap_registers_with_validation_approved(flow: TaxiTipMonitoringFlo
         assert test_registry.registered_tags["role"] == "champion", "Bootstrap version should have champion role"
 
 
-def test_full_bootstrap_to_load_champion_flow(flow: TaxiTipMonitoringFlow, feature_xy: FeatureXY) -> None:
+def test_full_bootstrap_to_load_champion_flow(flow: GreenTaxiFlow, feature_xy: FeatureXY) -> None:
     """
     Integration test: Bootstrap creates champion, then load_champion retrieves it.
     """
